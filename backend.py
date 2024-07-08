@@ -26,6 +26,9 @@ def run_script():
         gpt_response = function_calling(prompt)
         print(gpt_response)
 
+        with open('gpt_response.txt', 'a') as text:
+            text.write('Prompt' + prompt + '\n' + 'Extrated data' + gpt_response + '\n')
+
         response = {
             "status": "success",
             "message": "Data received successfully!"
