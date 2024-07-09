@@ -11,7 +11,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["https://rephonic.com"], "methods": ["GET", "POST"]}})
 
 @app.route('/get-fulltext', methods=['POST'])
 def run_script():
@@ -26,7 +26,7 @@ def run_script():
         gpt_response = function_calling(prompt)
         print(gpt_response)
 
-        with open('gpt_response.txt', 'a') as text:
+        with open('gpt_response.txt', 'a', encoding='utf-8') as text:
             text.write('Prompt' + prompt + '\n' + 'Extrated data' + gpt_response + '\n')
 
         response = {
@@ -54,11 +54,11 @@ def function_calling(prompt):
                     "properties": {
                         "name": {
                             "type": "string",
-                            "description": "Extract the name of the podcast guest themeselves. I don't need no one else and other description. Output is only name."
+                            "description": "Extract the name of the podcast guest themeselves. I don't need no one else and other description. Output is only name. If you can't find the required data, output empty string."
                         },
                         "company": {
                             "type": "string",
-                            "description": "Extract the company name of the podcast guest themeselves. I don't need no one else and other description. Output is only company name."
+                            "description": "Extract the company name of the podcast guest themeselves. I don't need no one else and other description. Output is only company name. If you can't find the required data, output empty string."
                         },
                     },
                     "required": ["name", "company"]
