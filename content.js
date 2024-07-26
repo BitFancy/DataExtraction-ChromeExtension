@@ -31,8 +31,6 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const total_text = "";
-
 async function startExtraction() {
     console.log("Starting extraction...");
     
@@ -72,32 +70,30 @@ async function startExtraction() {
             moreViewButton.click();
             console.log("Found more view button");
             await delay(500);
-            fullText = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodePlayer__Notes-sc-tg2xvn-4.efhJdH')[0];
+            fullText = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodeList__EpisodeBox-sc-aohkrv-2')[0];
             console.log(`Full content : ${fullText.textContent}`);
         } else {
             console.log("Not found more view button");
-            fullText = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodePlayer__Notes-sc-tg2xvn-4.efhJdH')[0];
+            fullText = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodeList__EpisodeBox-sc-aohkrv-2')[0];
             console.log(`Full content : ${fullText.textContent}`);
         }
     
         await delay(1000);
         
-        // total_text += fullText.textContent;
-
-        // const response = await fetch('https://skilled-albacore-indirectly.ngrok-free.app/get-fulltext', {
-        //     method: 'POST',
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ "text": fullText.textContent }),
-        // })
+        const response = await fetch('https://garfish-safe-strongly.ngrok-free.app/get-fulltext', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "text": fullText.textContent }),
+        })
             
-        // if(response.ok) {
-        //     const data = await response.json()
-        //     console.log("data", data)
-        // } else {
-        //     console.log(response)
-        // }
+        if(response.ok) {
+            const data = await response.json()
+            console.log("message : ", data.result)
+        } else {
+            console.log(response)
+        }
     }
     
     for (let element of searchResults) {
