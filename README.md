@@ -25,8 +25,8 @@
 1. **Clone the Repository**
 
     ```sh
-    git clone https://github.com/yourusername/rephonic-lead-generator.git
-    cd rephonic-lead-generator
+    git clone https://github.com/hi-tech-AI/chrome-extension-data-extraction.git
+    cd chrome-extension-data-extraction
     ```
 
 2. **Install Backend Dependencies**
