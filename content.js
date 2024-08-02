@@ -81,6 +81,7 @@ async function startExtraction() {
         await delay(1000);
         
         const response = await fetch('https://garfish-safe-strongly.ngrok-free.app/get-fulltext', {
+        // const response = await fetch('https://clean-quickly-gull.ngrok-free.app/get-fulltext', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
