@@ -49,7 +49,7 @@ async function startExtraction() {
             console.log("Not found podcast");
         }
         
-        await delay(2000);
+        await delay(3000);
 
         const episodeButton = document.querySelector('.ant-drawer-body').querySelectorAll('.ant-btn.ant-btn-primary')[0];
 
@@ -61,39 +61,60 @@ async function startExtraction() {
         }
     
         await delay(1000);
-    
-        const moreViewButton = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.common__BlueLink-sc-sr8ojx-8.blsWrk')[0];
-    
-        let fullText = "";
-    
-        if (moreViewButton) {
-            moreViewButton.click();
-            console.log("Found more view button");
-            await delay(500);
-            fullText = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodeList__EpisodeBox-sc-aohkrv-2')[0];
-            console.log(`Full content : ${fullText.textContent}`);
-        } else {
-            console.log("Not found more view button");
-            fullText = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodeList__EpisodeBox-sc-aohkrv-2')[0];
-            console.log(`Full content : ${fullText.textContent}`);
+
+        const moreQuestButton = document.querySelectorAll('.ant-drawer-body')[1].querySelector('.EpisodeList__MoreButtonContainer-sc-aohkrv-1.egSuiW').getElementsByTagName('button')[0];
+
+        if (moreQuestButton) {
+            moreQuestButton.click();
+            console.log("Clicked moreQuestButton");
+        }
+
+        await delay(5000)
+        
+        const guestlist = document.querySelectorAll('.ant-drawer-body')[1].querySelectorAll('.EpisodeList__EpisodeBox-sc-aohkrv-2.dFVaXb')
+
+        async function processGuest(item) {
+            const moreViewButton = item.querySelector('.common__BlueLink-sc-sr8ojx-8.blsWrk');
+
+            let fullText = "";
+
+            if (moreViewButton) {
+                moreViewButton.click();
+                console.log("Found more view button");
+                await delay(500);
+                fullText = item.querySelector('.Episode__Notes-sc-oqcfzl-5.iJkTAB');
+                console.log(`Full content : ${fullText.textContent}`);
+            } else {
+                console.log("Not found more view button");
+                fullText = item.querySelector('.Episode__Notes-sc-oqcfzl-5.iJkTAB');
+                console.log(`Full content : ${fullText.textContent}`);
+            }
+
+            await delay(1000);
+
+            const response = await fetch('https://garfish-safe-strongly.ngrok-free.app/get-fulltext', {
+            // const response = await fetch('https://clean-quickly-gull.ngrok-free.app/get-fulltext', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "text": fullText.textContent }),
+            })
+                
+            if(response.ok) {
+                const data = await response.json()
+                console.log("message : ", data.result)
+            } else {
+                console.log(response)
+            }
+
+            if (moreViewButton) {
+                moreViewButton.click();
+            }
         }
     
-        await delay(1000);
-        
-        const response = await fetch('https://garfish-safe-strongly.ngrok-free.app/get-fulltext', {
-        // const response = await fetch('https://clean-quickly-gull.ngrok-free.app/get-fulltext', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ "text": fullText.textContent }),
-        })
-            
-        if(response.ok) {
-            const data = await response.json()
-            console.log("message : ", data.result)
-        } else {
-            console.log(response)
+        for (let guest of guestlist) {
+            await processGuest(guest);
         }
     }
     
